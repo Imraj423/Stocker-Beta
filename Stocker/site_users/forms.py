@@ -6,6 +6,7 @@ class Login_Form(forms.Form):
     password = forms.CharField(max_length=42)
 
 
+# model form
 class Signup_Form(forms.Form):
     email = forms.EmailField()
     display_name = forms.CharField(max_length=42)

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+
 <style>
     div.row {
         text-align: center;
@@ -73,6 +74,25 @@
         width: 30%;
         margin: 10px auto 0px auto;
     }
+
+    div#detailLong {
+        border: 1px solid orange;
+        border-radius: 30px;
+        padding: 0px 20px 0px 20px;
+        text-align: center;
+    }
+
+    div#detailLong h3.row {
+        margin: 42px auto 42px auto;
+    }
+
+    div#detailLong p {
+        text-align: left;
+    }
+
+    div#detailLong b {
+        text-align: right;
+    }
 </style>
 
 <div>
@@ -140,7 +160,49 @@
             <p class='col'>$ {{tkr.price}}</p>
             <p class='col'>{{tkr.change}} %</p>
         </div>
+
+        <div id='detailLong' data-tkr=`{trk.company}`>
+            {% for co in company %}
+            {% if tkr.symbol == co.symbol %}
+
+            <h3 class='row'>About</h3>
+
+            <!-- <div class='row'> -->
+            <b class='row'>CO. Description: </b>
+            <br />
+            <p class='row'>{{co.description}}</p>
+            <!-- </div> -->
+
+            <div class='row'>
+                <b class='col'>CEO: </b>
+                <p class='col'>{{co.CEO}}</p>
+            </div>
+
+            <div class='row'>
+                <b class='col'>Industry: </b>
+                <p class='col'>{{co.industry}}</p>
+            </div>
+
+            <div class='row'>
+                <b class='col'>Website: </b>
+                <p class='col'>{{co.website}}</p>
+            </div>
+
+            {% endif %}
+            {% endfor %}
+        </div>
         {% endfor %}
     </div>
 </div>
+
+
+<script>
+    const handleClick = (ev) => {
+        console.log(ev.target)
+    }
+    const detail = document.getElementById('detailShort')
+    detail.addEventListener('click', (ev) => handleClick(ev))
+</script>
+
+
 {% endblock %}
