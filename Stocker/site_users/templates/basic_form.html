@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    input {
+        border-radius: 30px;
+        width: 100%;
+    }
+
+    h1 {
+        text-align: center;
+        margin: 42px 0px 42px 0px;
+    }
+
+    p {
+        text-align: center;
+        /* margin: 0px auto 0px auto; */
+    }
+
+    label {
+        position: relative;
+        font-weight: lighter;
+        top: 60px;
+    }
+
+    form {
+        margin: 42px 0px 84px 0px;
+    }
+</style>
+
+<div class='container w-50'>
+    <hr />
+    <h1>Login / Sign Up</h1>
+    <hr />
+
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <br />
+        <br />
+        <br />
+        <input type="submit" value="Submit">
+    </form>
+</div>
+
+{% endblock %}
