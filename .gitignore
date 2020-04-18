@@ -3,7 +3,7 @@
 # Edit at https://www.gitignore.io/?templates=django
 
 ## That history app Raj had me install ##
-.history/
+Stocker/.history/
 
 ### Django ###
 *.log
