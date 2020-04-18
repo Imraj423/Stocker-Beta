@@ -3,7 +3,9 @@
 # Edit at https://www.gitignore.io/?templates=django
 
 ## That history app Raj had me install ##
-Stocker/.history/
+.history
+.venv
+.vscode
 
 ### Django ###
 *.log
