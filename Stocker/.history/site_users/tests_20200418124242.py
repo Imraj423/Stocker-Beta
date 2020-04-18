@@ -67,7 +67,7 @@ class HelperTestCase(TestCase):
 
     def testMultiFetcher(self):
         """ Test the Multifetcher """
-        stock_list = multiFetcher(['AMZN', 'AAPL', 'TSLA', 'MSFT'])
+        stock_list = multiFetcher(['amzn', 'aapl', 'tsla', 'msft'])
 
         self.assertTrue(len(stock_list) == len(['amzn', 'aapl', 'tsla', 'msft']))
         self.assertTrue(isinstance(stock_list[0], dict))
