@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponseRedirect, reverse
 from .forms import Login_Form, Signup_Form, Deposit_Form, Withdraw_Form, Search_Form
 from .models import Custom_User
+from portfolio.models import Company
 import requests
 from .helpers import *
 
