@@ -55,13 +55,10 @@ def profile(request):
             if deposit_form.is_valid():
                 amount = do_form_stuff(deposit_form)['deposit']
                 current_usr.deposits += amount
-                current_usr.save()
-
+            
             elif withdraw_form.is_valid():
                 amount = do_form_stuff(withdraw_form)['withdraw']
                 current_usr.withdraws -= amount
-                current_usr.save()
-
             else:
                 return 'Should not be able to get here'
 
