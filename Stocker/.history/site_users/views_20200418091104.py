@@ -1,7 +1,6 @@
 from django.shortcuts import render, HttpResponseRedirect, reverse
 from .forms import Login_Form, Signup_Form, Deposit_Form, Withdraw_Form, Search_Form
 from .models import Custom_User
-from portfolio.models import Portfolio, Holdings, Company
 import requests
 from .helpers import *
 
@@ -87,28 +86,7 @@ def buy(request, company):
     return render(request, 'buy.html', {'data': data})
 
 
-def finish_buy(request):
-
-    # if the user has a portfolio, use that
-    # if not, make one and use that
-    
-    # in the helper function we create the Company,
-    # look up that company we just created / updated
-
-    # add it to holdings
-    # add the holding to request.user.portfolio
-
-    if request.user.portfolio:
-        p = request.user.portfolio.stocks.all()
-    else:
-        Portfolio.objects.create(name='p1', owner=request.user)
-        p = request.user.portfolio.stocks.all()
-
-    Holdings.objects.create(stock='???', amount='???')
-
-    # Add the purchase to a 'holdings'
-    # add the holdings to the request.user.prortfolio.stocks
-
+def finish_buy(request, ticker):
     return HttpResponseRedirect(reverse('index'))
 
 

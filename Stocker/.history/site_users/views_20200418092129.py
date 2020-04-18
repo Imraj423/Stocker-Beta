@@ -88,16 +88,6 @@ def buy(request, company):
 
 
 def finish_buy(request):
-
-    # if the user has a portfolio, use that
-    # if not, make one and use that
-    
-    # in the helper function we create the Company,
-    # look up that company we just created / updated
-
-    # add it to holdings
-    # add the holding to request.user.portfolio
-
     if request.user.portfolio:
         p = request.user.portfolio.stocks.all()
     else:

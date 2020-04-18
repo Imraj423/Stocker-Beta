@@ -7,7 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('buy/<str:company>', views.buy, name='buy'),
-    path('finalize/', views.finish_buy, name='finalize'),
+    path('finishBuy/', views.add_to_following, name='finishBuy'),
     path('favorite/<str:company>', views.add_to_following, name='favorite'),
     path('analysis/<str:company>', views.analysis, name='analysis'),
     path('profile/', views.profile, name='profile'),
