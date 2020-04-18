@@ -2,7 +2,6 @@ from django.db import models
 from django.apps import apps
 from django.contrib.auth.models import AbstractUser
 from portfolio.models import Portfolio
-from decimal import Decimal
 
 class Custom_User(AbstractUser):
     email = models.EmailField()

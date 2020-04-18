@@ -16,11 +16,11 @@ class Signup_Form(forms.Form):
 
 
 class Deposit_Form(forms.Form):
-    deposit = forms.DecimalField(decimal_places=2, max_digits=8)
+    deposit = models.DecimalField(decimal_places=2, max_digits=8, null=True)
 
 
 class Withdraw_Form(forms.Form):
-    withdraw = forms.DecimalField(decimal_places=2, max_digits=8)
+    withdraw = models.DecimalField(decimal_places=2, max_digits=8, null=True)
 
 
 class Search_Form(forms.Form):

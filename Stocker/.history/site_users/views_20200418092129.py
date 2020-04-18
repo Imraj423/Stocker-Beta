@@ -34,8 +34,7 @@ def index(request):
                     {
                         'form': search_form,
                         'following': follow_data,
-                        'company': company_data,
-                        'portfolio': request.user.portfolio.stocks.all() 
+                        'company': company_data
                     })
 
 # class
@@ -88,17 +87,17 @@ def buy(request, company):
     return render(request, 'buy.html', {'data': data})
 
 
-def finish_buy(request, ticker):
+def finish_buy(request):
+    if request.user.portfolio:
+        p = request.user.portfolio.stocks.all()
+    else:
+        Portfolio.objects.create(name='p1', owner=request.user)
+        p = request.user.portfolio.stocks.all()
 
-    data = fetchTicker(ticker)
-    P = Portfolio.objects.filter(owner=request.user)
-    if len(P) <= 0:
-        P = Portfolio.objects.create(owner=request.user)   
-    C = Company.objects.get(ticker_symbol=data['symbol'])
-    H = Holdings.objects.create(stock=C, count=5)
+    Holdings.objects.create(stock='???', amount='???')
 
-    request.user.portfolio.stocks.add(H)
-    request.user.portfolio.save()
+    # Add the purchase to a 'holdings'
+    # add the holdings to the request.user.prortfolio.stocks
 
     return HttpResponseRedirect(reverse('index'))
 

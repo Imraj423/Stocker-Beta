@@ -34,8 +34,7 @@ def index(request):
                     {
                         'form': search_form,
                         'following': follow_data,
-                        'company': company_data,
-                        'portfolio': request.user.portfolio.stocks.all() 
+                        'company': company_data
                     })
 
 # class
@@ -99,7 +98,6 @@ def finish_buy(request, ticker):
 
     request.user.portfolio.stocks.add(H)
     request.user.portfolio.save()
-
     return HttpResponseRedirect(reverse('index'))
 
 

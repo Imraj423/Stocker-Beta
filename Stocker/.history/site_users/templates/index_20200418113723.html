@@ -138,14 +138,9 @@
     <hr />
     <h1>Portfolio</h1>
     <hr />
-
-    {% for holding in portfolio %}
-    <div class='row'>
-        <p class='col'>{{holding.stock}}</p>
-        <p class='col'>{{holding.count}}</p>
-    </div>
-    {% endfor %}
-
+    <p>{{ portfolio }}</p>
+    <p><a href="{% url 'buy' 'AAPL' %}">List Information</a></p>
+    <p>About Section (Hide This)</p>
 </div>
 
 <div class='container' id='following'>

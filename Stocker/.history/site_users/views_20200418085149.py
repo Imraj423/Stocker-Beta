@@ -1,7 +1,6 @@
 from django.shortcuts import render, HttpResponseRedirect, reverse
 from .forms import Login_Form, Signup_Form, Deposit_Form, Withdraw_Form, Search_Form
 from .models import Custom_User
-from portfolio.models import Portfolio, Holdings, Company
 import requests
 from .helpers import *
 
@@ -34,8 +33,7 @@ def index(request):
                     {
                         'form': search_form,
                         'following': follow_data,
-                        'company': company_data,
-                        'portfolio': request.user.portfolio.stocks.all() 
+                        'company': company_data
                     })
 
 # class
@@ -58,7 +56,7 @@ def profile(request):
                 amount = do_form_stuff(deposit_form)['deposit']
                 current_usr.deposits += amount
                 current_usr.save()
-
+            
             elif withdraw_form.is_valid():
                 amount = do_form_stuff(withdraw_form)['withdraw']
                 current_usr.withdraws -= amount
@@ -88,18 +86,7 @@ def buy(request, company):
     return render(request, 'buy.html', {'data': data})
 
 
-def finish_buy(request, ticker):
-
-    data = fetchTicker(ticker)
-    P = Portfolio.objects.filter(owner=request.user)
-    if len(P) <= 0:
-        P = Portfolio.objects.create(owner=request.user)   
-    C = Company.objects.get(ticker_symbol=data['symbol'])
-    H = Holdings.objects.create(stock=C, count=5)
-
-    request.user.portfolio.stocks.add(H)
-    request.user.portfolio.save()
-
+def finishBuy(request, ticker):
     return HttpResponseRedirect(reverse('index'))
 
 
