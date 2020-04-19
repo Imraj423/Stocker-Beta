@@ -1,17 +1,28 @@
-from django.conf import settings
+from django.views import View
+
 from django.shortcuts import redirect
 from django.shortcuts import render, HttpResponseRedirect, reverse
+
+from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.views import View
-from .forms import Login_Form, Signup_Form, Deposit_Form, Withdraw_Form, Search_Form
-from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Custom_User
-from portfolio.models import Portfolio, Holdings, Company
-import requests
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponse
+from django.test import SimpleTestCase, override_settings
+from django.urls import path
+
+from django.conf import settings
+from portfolio.models import Portfolio, Holdings, Company
+from .models import Custom_User
+from .forms import Login_Form, Signup_Form, Deposit_Form, Withdraw_Form, Search_Form
 from .helpers import *
+
+
+
+import requests
 
 
 @login_required(login_url="/login/")

@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'a06+i#1^f62agep^&0%d#&@owo@vuk-58t-yu2nq)ae#o8@s0w'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False 
 
 ALLOWED_HOSTS = ['*']
 
@@ -126,7 +126,7 @@ STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'site_users.Custom_User'
 
-handler404 = 'site_users.views.my_custom_page_not_found_view'
-handler500 = 'site_users.views.my_custom_error_view'
-handler403 = 'site_users.views.my_custom_permission_denied_view'
-handler400 = 'site_users.views.my_custom_bad_request_view'
+handler404 = 'Stocker.views.my_custom_page_not_found_view'
+handler500 = 'Stocker.views.my_custom_error_view'
+handler403 = 'Stocker.views.my_custom_permission_denied_view'
+handler400 = 'Stocker.views.my_custom_bad_request_view'
