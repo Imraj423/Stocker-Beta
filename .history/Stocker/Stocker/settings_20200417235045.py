@@ -123,8 +123,3 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'site_users.Custom_User'
-
-handler404 = 'site_users.views.my_custom_page_not_found_view'
-handler500 = 'site_users.views.my_custom_error_view'
-handler403 = 'site_users.views.my_custom_permission_denied_view'
-handler400 = 'site_users.views.my_custom_bad_request_view'
