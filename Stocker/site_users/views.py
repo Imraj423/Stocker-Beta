@@ -12,6 +12,12 @@ from portfolio.models import Portfolio, Holdings, Company
 import requests
 from .helpers import *
 
+def handler404(request, exception):
+    return render(request, '404.html', status=404)
+
+def handler500(request):
+    return render(request, '500.html', status=500)
+
 
 @login_required(login_url="/login/")
 def index(request):
@@ -29,20 +35,20 @@ def index(request):
             data = search_form.cleaned_data
             ticker = data['ticker']
             stock_data = fetchTicker(ticker)
-            return render(request, 'index.html', 
+            return render(request, 'index.html',
                         {
                             'form': search_form,
                             'data': stock_data,
                             'following': follow_data,
                             'company': company_data
                         })
-        
-    return render(request, 'index.html', 
+
+    return render(request, 'index.html',
                     {
                         'form': search_form,
                         'following': follow_data,
                         'company': company_data,
-                        'portfolio': request.user.portfolio.stocks.all() 
+                        'portfolio': request.user.portfolio.stocks.all()
                     })
 
 # class
@@ -51,32 +57,32 @@ def index(request):
 
 
 # @login_required(login_url="/login/")
- 
+
 class Profile_view(LoginRequiredMixin, View):
     login_url = '/login/'
-    
+
     def get(self, request, *args, **kwargs):
-        return render(request, 'profile.html', 
+        return render(request, 'profile.html',
             {
-                'user': request.user, 
+                'user': request.user,
                 'deposit_form': Deposit_Form(),
                 'withdraw_form': Withdraw_Form()
-            } 
+            }
         )
-    
+
     def post(self, request, *args, **kwargs):
         # request.user = Custom_User.objects.get(pk=request.user.pk)
         deposit_form = Deposit_Form(request.POST)
         withdraw_form = Withdraw_Form(request.POST)
 
         # if request.method == "POST":
-   
+
         def do_form_stuff(f):
             form = f
             return form.cleaned_data
 
         if deposit_form.is_valid() or withdraw_form.is_valid():
-            
+
             if deposit_form.is_valid():
                 amount = do_form_stuff(deposit_form)['deposit']
                 request.user.deposits += amount
@@ -90,9 +96,9 @@ class Profile_view(LoginRequiredMixin, View):
             else:
                 return 'Should not be able to get here'
 
-        return render(request, 'profile.html', 
+        return render(request, 'profile.html',
                     {
-                        'user': request.user, 
+                        'user': request.user,
                         'deposit_form': deposit_form,
                         'withdraw_form': withdraw_form
                     })
@@ -121,7 +127,7 @@ def finish_buy(request, ticker):
     if H:
         H.count += 1
         H.save()
-    else: 
+    else:
         H = Holdings.objects.create(stock=C, count=1)
         H.save()
         request.user.portfolio.stocks.add(H)
