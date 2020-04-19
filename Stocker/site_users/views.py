@@ -1,5 +1,12 @@
+from django.conf import settings
+from django.shortcuts import redirect
 from django.shortcuts import render, HttpResponseRedirect, reverse
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.views import View
 from .forms import Login_Form, Signup_Form, Deposit_Form, Withdraw_Form, Search_Form
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Custom_User
 from portfolio.models import Portfolio, Holdings, Company
 import requests
@@ -7,17 +14,13 @@ from django.contrib.auth.decorators import login_required
 from .helpers import *
 
 
-# class
-@login_required(login_url='/login/')
+@login_required(login_url="/login/")
 def index(request):
 
-    # current_usr = Custom_User.objects.get(pk=request.user.pk)
     follow_list = request.user.favorites.split(',')[1:]
     follow_data = multiFetcher(follow_list)
     company_data = [fetchCompanyData(tkr) for tkr in follow_list]
     search_form = Search_Form(request.POST)
-
-    #refactor {following, and company}
 
     if request.method == "POST":
         if search_form.is_valid():
@@ -31,7 +34,7 @@ def index(request):
                             'following': follow_data,
                             'company': company_data
                         })
-
+        
     return render(request, 'index.html', 
                     {
                         'form': search_form,
@@ -40,16 +43,22 @@ def index(request):
                         'portfolio': request.user.portfolio.stocks.all() 
                     })
 
-# class
-# when we need differend HTTP VERBS
-@login_required(login_url='/login/')
-def profile(request):
 
-    # current_usr = Custom_User.objects.get(pk=request.user.pk)
-    deposit_form = Deposit_Form(request.POST)
-    withdraw_form = Withdraw_Form(request.POST)
-
-    if request.method == "POST":
+class Profile_view(LoginRequiredMixin, View):
+    login_url = '/login/'
+    
+    def get(self, request, *args, **kwargs):
+        return render(request, 'profile.html', 
+            {
+                'user': request.user, 
+                'deposit_form': Deposit_Form(),
+                'withdraw_form': Withdraw_Form()
+            } 
+        )
+    
+    def post(self, request, *args, **kwargs):
+        deposit_form = Deposit_Form(request.POST)
+        withdraw_form = Withdraw_Form(request.POST)
 
         def do_form_stuff(f):
             form = f
@@ -70,7 +79,7 @@ def profile(request):
             else:
                 return 'Should not be able to get here'
 
-    return render(request, 'profile.html', 
+        return render(request, 'profile.html', 
                     {
                         'user': request.user, 
                         'deposit_form': deposit_form,
@@ -78,46 +87,84 @@ def profile(request):
                     })
 
 
-@login_required(login_url='login/')
+@login_required(login_url="/login/")
 def add_to_following(request, company):
 
-    # Do some logic:
     request.user.favorites += f',{company}'
     request.user.save()
     return HttpResponseRedirect(reverse('index'))
 
 
-@login_required(login_url='/login/')
+@login_required(login_url="/login/")
 def buy(request, company):
     data = fetchTicker(company)
     return render(request, 'buy.html', {'data': data})
 
 
-@login_required(login_url='login/')
+@login_required(login_url="/login/")
 def finish_buy(request, ticker):
 
     data = fetchTicker(ticker)
-    P = Portfolio.objects.filter(owner=request.user)
-    if len(P) <= 0:
-        P = Portfolio.objects.create(owner=request.user)   
-    C = Company.objects.get(ticker_symbol=data['symbol'])
-    H = Holdings.objects.create(stock=C, count=5)
+    P = Portfolio.objects.get(owner=request.user)
+    C = Company.objects.filter(ticker_symbol=data['symbol'])
+    H = P.Holdings.get(stock=C)
 
-    request.user.portfolio.stocks.add(H)
-    request.user.portfolio.save()
+    if H:
+        H.count += 1
+        H.save()
+    else: 
+        H = Holdings.objects.create(stock=C, count=1)
+        H.save()
+        request.user.portfolio.stocks.add(H)
+        request.user.portfolio.save()
 
     return HttpResponseRedirect(reverse('index'))
 
 
-def analysis(request, company):
-    # Dead ass last, this may not happen at all
-    # return render(request, 'analysis.html')
-    pass
+def login_view(request):
+    html = 'basic_form.html'
+    if request.method == 'POST':
+        form = Login_Form(request.POST)
+
+        if form.is_valid():
+            data = form.cleaned_data
+            user = authenticate(
+                username=data['username'], password=data['password'])
+            if user is not None:
+                login(request, user)
+                return HttpResponseRedirect(reverse('index'))
+    else:
+        form = Login_Form()
+
+    return render(request, html, {'form': form})
 
 
-def login(request):
-    return render(request, 'basic_form.html', {'form': Login_Form})
+def logoutUser(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('login'))
 
 
 def signup(request):
-    return render(request, 'basic_form.html', {'form': Signup_Form})
+    html = 'basic_form.html'
+
+    if request.method == 'POST':
+        form = Signup_Form(request.POST)
+
+        if form.is_valid():
+            data = form.cleaned_data
+            user = Custom_User.objects.create_user(
+                email=data['email'],
+                username=data['username'],
+                first_name=data['first_name'],
+                last_name=data['last_name'],
+                password=data['password'],
+            )
+            Portfolio.objects.create(
+                name='',
+                owner=user
+            )
+            login(request, user)
+            return HttpResponseRedirect(reverse('index'))
+    else:
+        form = Signup_Form()
+    return render(request, html, {'form': form})

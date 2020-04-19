@@ -15,6 +15,7 @@
 </style>
 
 <h1>{{ data.companyName}}</h1>
+    {{data.symbol}}
 <hr />
 
 <h3>Shares to Buy</h3>
@@ -22,9 +23,9 @@
 <div class="container w-50 ml-auto mr-auto">
 
     <div class="row">
-        <a class='col' href="{% 'url' finishBuy %}">5</a>
-        <a clss='col' href="{% 'url' finishBuy %}">10</a>
-        <a clss='col' href="{% 'url' finishBuy %}">20</a>
+        <a class='col' href="{% url 'finalize' data.symbol %}">5</a>
+        <a clss='col' href="{% url 'finalize' data.symbol %}">10</a>
+        <a clss='col' href="{% url 'finalize' data.symbol %}">20</a>
     </div>
 
     <div class="row">

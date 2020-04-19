@@ -1,18 +1,17 @@
 from django import forms
+from django.forms import ModelForm
+from .models import Custom_User
 
 
 class Login_Form(forms.Form):
-    display_name = forms.CharField(max_length=42)
+    username = forms.CharField(max_length=42)
     password = forms.CharField(max_length=42)
 
 
-# model form
-class Signup_Form(forms.Form):
-    email = forms.EmailField()
-    display_name = forms.CharField(max_length=42)
-    first_name = forms.CharField(max_length=42)
-    last_name = forms.CharField(max_length=42)
-    password = forms.CharField(max_length=42)
+class Signup_Form(ModelForm):
+    class Meta:
+        model = Custom_User
+        fields = ['email', 'username', 'first_name', 'last_name', 'password']
 
 
 class Deposit_Form(forms.Form):
