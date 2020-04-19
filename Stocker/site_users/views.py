@@ -4,8 +4,9 @@ from django.shortcuts import render, HttpResponseRedirect, reverse
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
+from django.views import View
 from .forms import Login_Form, Signup_Form, Deposit_Form, Withdraw_Form, Search_Form
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Custom_User
 from portfolio.models import Portfolio, Holdings, Company
 import requests
@@ -49,15 +50,27 @@ def index(request):
 
 
 
-@login_required(login_url="/login/")
-def profile(request):
+# @login_required(login_url="/login/")
+ 
+class Profile_view(LoginRequiredMixin, View):
+    login_url = '/login/'
+    
+    def get(self, request, *args, **kwargs):
+        return render(request, 'profile.html', 
+            {
+                'user': request.user, 
+                'deposit_form': Deposit_Form(),
+                'withdraw_form': Withdraw_Form()
+            } 
+        )
+    
+    def post(self, request, *args, **kwargs):
+        # request.user = Custom_User.objects.get(pk=request.user.pk)
+        deposit_form = Deposit_Form(request.POST)
+        withdraw_form = Withdraw_Form(request.POST)
 
-    # request.user = Custom_User.objects.get(pk=request.user.pk)
-    deposit_form = Deposit_Form(request.POST)
-    withdraw_form = Withdraw_Form(request.POST)
-
-    if request.method == "POST":
-
+        # if request.method == "POST":
+   
         def do_form_stuff(f):
             form = f
             return form.cleaned_data
@@ -77,7 +90,7 @@ def profile(request):
             else:
                 return 'Should not be able to get here'
 
-    return render(request, 'profile.html', 
+        return render(request, 'profile.html', 
                     {
                         'user': request.user, 
                         'deposit_form': deposit_form,
@@ -101,14 +114,18 @@ def buy(request, company):
 def finish_buy(request, ticker):
 
     data = fetchTicker(ticker)
-    P = Portfolio.objects.filter(owner=request.user)
-    if len(P) <= 0:
-        P = Portfolio.objects.create(owner=request.user)   
-    C = Company.objects.get(ticker_symbol=data['symbol'])
-    H = Holdings.objects.create(stock=C, count=5)
+    P = Portfolio.objects.get(owner=request.user)
+    C = Company.objects.filter(ticker_symbol=data['symbol'])
+    H = P.Holdings.get(stock=C)
 
-    request.user.portfolio.stocks.add(H)
-    request.user.portfolio.save()
+    if H:
+        H.count += 1
+        H.save()
+    else: 
+        H = Holdings.objects.create(stock=C, count=1)
+        H.save()
+        request.user.portfolio.stocks.add(H)
+        request.user.portfolio.save()
 
     return HttpResponseRedirect(reverse('index'))
 
