@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+LOGIN_URL = '/login/'
 
 # Application definition
 
@@ -57,7 +58,8 @@ ROOT_URLCONF = 'Stocker.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'Stocker', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

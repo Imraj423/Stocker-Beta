@@ -30,9 +30,12 @@
         margin-bottom: 84px;
     }
 </style>
-
+<a href="/login/">login</a>
+<a href="/">Home</a>
+ <a class="hello-msg" href="{% url 'logout' %}">Logout</a>
+ <a class="hello-msg" href="{% url 'signup' %}">signup</a>
 <hr />
-<h1>Profile</h1>
+<h1>{{request.user}}'s Profile</h1>
 <hr />
 
 <div class='container'>
@@ -62,10 +65,7 @@
             <p class='col'>email</p>
             <p class='col'>{{ user.email}}</p>
         </div>
-        <div class='row'>
-            <p class='col'>display name</p>
-            <p class='col'>{{ user.display_name}}</p>
-        </div>
+        
         <div class='row'>
             <p class='col'>first name</p>
             <p class='col'>{{ user.first_name}}</p>

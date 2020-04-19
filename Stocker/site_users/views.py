@@ -1,4 +1,10 @@
+from django.conf import settings
+from django.shortcuts import redirect
 from django.shortcuts import render, HttpResponseRedirect, reverse
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
 from .forms import Login_Form, Signup_Form, Deposit_Form, Withdraw_Form, Search_Form
 from .models import Custom_User
 from portfolio.models import Portfolio, Holdings, Company
@@ -6,11 +12,11 @@ import requests
 from .helpers import *
 
 
-# class
+@login_required(login_url="/login/")
 def index(request):
 
-    current_usr = Custom_User.objects.get(pk=request.user.pk)
-    follow_list = current_usr.favorites.split(',')[1:]
+    # request.user = Custom_User.objects.get(pk=request.user.pk)
+    follow_list = request.user.favorites.split(',')[1:]
     follow_data = multiFetcher(follow_list)
     company_data = [fetchCompanyData(tkr) for tkr in follow_list]
     search_form = Search_Form(request.POST)
@@ -29,7 +35,7 @@ def index(request):
                             'following': follow_data,
                             'company': company_data
                         })
-
+        
     return render(request, 'index.html', 
                     {
                         'form': search_form,
@@ -40,9 +46,13 @@ def index(request):
 
 # class
 # when we need differend HTTP VERBS
+
+
+
+@login_required(login_url="/login/")
 def profile(request):
 
-    current_usr = Custom_User.objects.get(pk=request.user.pk)
+    # request.user = Custom_User.objects.get(pk=request.user.pk)
     deposit_form = Deposit_Form(request.POST)
     withdraw_form = Withdraw_Form(request.POST)
 
@@ -56,25 +66,25 @@ def profile(request):
             
             if deposit_form.is_valid():
                 amount = do_form_stuff(deposit_form)['deposit']
-                current_usr.deposits += amount
-                current_usr.save()
+                request.user.deposits += amount
+                request.user.save()
 
             elif withdraw_form.is_valid():
                 amount = do_form_stuff(withdraw_form)['withdraw']
-                current_usr.withdraws -= amount
-                current_usr.save()
+                request.user.withdraws -= amount
+                request.user.save()
 
             else:
                 return 'Should not be able to get here'
 
     return render(request, 'profile.html', 
                     {
-                        'user': current_usr, 
+                        'user': request.user, 
                         'deposit_form': deposit_form,
                         'withdraw_form': withdraw_form
                     })
 
-
+@login_required(login_url="/login/")
 def add_to_following(request, company):
 
     # Do some logic:
@@ -82,12 +92,12 @@ def add_to_following(request, company):
     request.user.save()
     return HttpResponseRedirect(reverse('index'))
 
-
+@login_required(login_url="/login/")
 def buy(request, company):
     data = fetchTicker(company)
     return render(request, 'buy.html', {'data': data})
 
-
+@login_required(login_url="/login/")
 def finish_buy(request, ticker):
 
     data = fetchTicker(ticker)
@@ -103,15 +113,58 @@ def finish_buy(request, ticker):
     return HttpResponseRedirect(reverse('index'))
 
 
-def analysis(request, company):
-    # Dead ass last, this may not happen at all
-    # return render(request, 'analysis.html')
-    pass
+# def login(request):
+#     # if not request.user.is_authenticated:
+#     #     return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+#     return render(request, 'basic_form.html', {'form': Login_Form})
+
+def login_view(request):
+    html = 'basic_form.html'
+    if request.method == 'POST':
+        form = Login_Form(request.POST)
+
+        if form.is_valid():
+            data = form.cleaned_data
+            user = authenticate(
+                username=data['username'], password=data['password'])
+            if user is not None:
+                login(request, user)
+                return HttpResponseRedirect(reverse('index'))
+    else:
+        form = Login_Form()
+
+    return render(request, html, {'form': form})
+
+# def signup(request):
+#     return render(request, 'basic_form.html', {'form': Signup_Form})
 
 
-def login(request):
-    return render(request, 'basic_form.html', {'form': Login_Form})
+def logoutUser(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('login'))
 
 
 def signup(request):
-    return render(request, 'basic_form.html', {'form': Signup_Form})
+    html = 'basic_form.html'
+
+    if request.method == 'POST':
+        form = Signup_Form(request.POST)
+
+        if form.is_valid():
+            data = form.cleaned_data
+            user = Custom_User.objects.create_user(
+                email=data['email'],
+                username=data['username'],
+                first_name=data['first_name'],
+                last_name=data['last_name'],
+                password=data['password'],
+            )
+            Portfolio.objects.create(
+                name='',
+                owner=user
+            )
+            login(request, user)
+            return HttpResponseRedirect(reverse('index'))
+    else:
+        form = Signup_Form()
+    return render(request, html, {'form': form})
