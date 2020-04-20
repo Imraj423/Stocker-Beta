@@ -158,24 +158,28 @@ def finish_sell(request, ticker, amount):
 
     return HttpResponseRedirect(reverse('index'))
 
-
-def login_view(request):
+class LoginView(View):
     html = 'basic_form.html'
-    if request.method == 'POST':
-        form = Login_Form(request.POST)
+    form_class = Login_Form
 
-        if form.is_valid():
-            data = form.cleaned_data
-            user = authenticate(
-                username=data['username'], password=data['password'])
-            if user is not None:
+    def get(self, request, *args, **kwargs):
+        form = self.form_class
+        return render(request, self.html, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if request.method == "POST":
+            form = Login_Form(request.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                user = authenticate(username=data['username'], password=data['password'])
                 login(request, user)
-                return HttpResponseRedirect(reverse('index'))
-    else:
-        form = Login_Form()
-
-    return render(request, html, {'form': form})
-
+                if user is not None:
+                    login(request, user)
+                    return HttpResponseRedirect("/")
+                else:
+                    return HttpResponseRedirect("login/")
+        return render(request, self.html, {'form': form})
 
 def logoutUser(request):
     logout(request)
