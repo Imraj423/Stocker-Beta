@@ -94,7 +94,7 @@
         text-align: right;
     }
 </style>
-                    <button><a href="logout/">Logout</a></button>
+<button><a href="logout/">Logout</a></button>
 
 <div>
     <div class="container w-50 ml-auto mr-auto mt-5">
@@ -129,6 +129,7 @@
         <div class='row' id='searchDataButtons'>
             <p class='col'><a href="{% url 'favorite' data.symbol %}">Follow</a></p>
             <p class='col'><a href="{% url 'buy' data.symbol %}">Buy</a></p>
+            <p class='col'><a href="{% url 'sell' data.symbol %}">Sell</a></p>
         </div>
     </div>
     {% endif %}
@@ -140,6 +141,7 @@
     <h1>Portfolio</h1>
     <hr />
 
+    <p>{{ something }}</p>
     {% for holding in portfolio %}
     <div class='row'>
         <p class='col'>{{holding.stock}}</p>

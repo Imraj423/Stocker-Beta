@@ -1,15 +1,23 @@
-from django.conf import settings
+from django.views import View
+
 from django.shortcuts import redirect
 from django.shortcuts import render, HttpResponseRedirect, reverse
+
+from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.views import View
-from .forms import Login_Form, Signup_Form, Deposit_Form, Withdraw_Form, Search_Form
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Custom_User
+
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponse
+from django.test import SimpleTestCase, override_settings
+from django.urls import path
+
+from django.conf import settings
 from portfolio.models import Portfolio, Holdings, Company
-import requests
+from .models import Custom_User
+from .forms import Login_Form, Signup_Form, Deposit_Form, Withdraw_Form, Search_Form
 from .helpers import *
 
 def handler404(request, exception):
@@ -19,16 +27,17 @@ def handler500(request):
     return render(request, '500.html', status=500)
 
 
+
+import requests
+
+
 @login_required(login_url="/login/")
 def index(request):
 
-    # request.user = Custom_User.objects.get(pk=request.user.pk)
     follow_list = request.user.favorites.split(',')[1:]
     follow_data = multiFetcher(follow_list)
     company_data = [fetchCompanyData(tkr) for tkr in follow_list]
     search_form = Search_Form(request.POST)
-
-    #refactor {following, and company}
 
     if request.method == "POST":
         if search_form.is_valid():
@@ -51,12 +60,6 @@ def index(request):
                         'portfolio': request.user.portfolio.stocks.all()
                     })
 
-# class
-# when we need differend HTTP VERBS
-
-
-
-# @login_required(login_url="/login/")
 
 class Profile_view(LoginRequiredMixin, View):
     login_url = '/login/'
@@ -71,11 +74,8 @@ class Profile_view(LoginRequiredMixin, View):
         )
 
     def post(self, request, *args, **kwargs):
-        # request.user = Custom_User.objects.get(pk=request.user.pk)
         deposit_form = Deposit_Form(request.POST)
         withdraw_form = Withdraw_Form(request.POST)
-
-        # if request.method == "POST":
 
         def do_form_stuff(f):
             form = f
@@ -103,43 +103,61 @@ class Profile_view(LoginRequiredMixin, View):
                         'withdraw_form': withdraw_form
                     })
 
+
 @login_required(login_url="/login/")
 def add_to_following(request, company):
 
-    # Do some logic:
     request.user.favorites += f',{company}'
     request.user.save()
     return HttpResponseRedirect(reverse('index'))
+
 
 @login_required(login_url="/login/")
 def buy(request, company):
     data = fetchTicker(company)
     return render(request, 'buy.html', {'data': data})
 
+
 @login_required(login_url="/login/")
-def finish_buy(request, ticker):
+def sell(request, company):
+    data = fetchTicker(company)
+    return render(request, 'sell.html', {'data': data})
+
+
+@login_required(login_url="/login/")
+def finish_buy(request, ticker, amount):
 
     data = fetchTicker(ticker)
-    P = Portfolio.objects.get(owner=request.user)
-    C = Company.objects.filter(ticker_symbol=data['symbol'])
-    H = P.Holdings.get(stock=C)
+    co = Company.objects.get(ticker_symbol=ticker)
 
-    if H:
-        H.count += 1
-        H.save()
+    if not request.user.portfolio.stocks.filter(stock=co):
+        ho = Holdings.objects.create(stock=co, count=int(amount))
+        request.user.portfolio.stocks.add(ho)
+
     else:
-        H = Holdings.objects.create(stock=C, count=1)
-        H.save()
-        request.user.portfolio.stocks.add(H)
-        request.user.portfolio.save()
+        stock_to_update = request.user.portfolio.stocks.filter(stock=co).first()
+        stock_to_update.count += int(amount)
+        stock_to_update.save()
+
+
+@login_required(login_url="/login/")
+def finish_sell(request, ticker, amount):
+
+    data = fetchTicker(ticker)
+    co = Company.objects.get(ticker_symbol=ticker)
+
+    try:
+        stock_to_update = request.user.portfolio.stocks.filter(stock=co).first()
+        if stock_to_update.count >= amount:
+            stock_to_update.count -= int(amount)
+            stock_to_update.save()
+        else:
+            print('error')
+    except:
+        print('idk')
 
     return HttpResponseRedirect(reverse('index'))
 
-
-# def login(request):
-#     # if not request.user.is_authenticated:
-#     #     return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
-#     return render(request, 'basic_form.html', {'form': Login_Form})
 
 def login_view(request):
     html = 'basic_form.html'
@@ -157,9 +175,6 @@ def login_view(request):
         form = Login_Form()
 
     return render(request, html, {'form': form})
-
-# def signup(request):
-#     return render(request, 'basic_form.html', {'form': Signup_Form})
 
 
 def logoutUser(request):

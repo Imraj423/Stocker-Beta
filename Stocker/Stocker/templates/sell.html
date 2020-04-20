@@ -18,21 +18,19 @@
 {{data.symbol}}
 <hr />
 
-<h3>Shares to Buy</h3>
-<p><a href="{% url 'sell' data.symbol %}">Or Sell!</a></p>
-
+<h3>Shares to Sell</h3>
 <h1>$ {{ data.latestPrice }}</h1>
 <div class="container w-50 ml-auto mr-auto">
 
     <div class="row">
-        <a class='col' href="{% url 'finalize' data.symbol 5 %}">5</a>
-        <a clss='col' href="{% url 'finalize' data.symbol  10%}">10</a>
-        <a clss='col' href="{% url 'finalize' data.symbol 20 %}">20</a>
+        <a class='col' href="{% url 'finalsell' data.symbol 5 %}">5</a>
+        <a clss='col' href="{% url 'finalsell' data.symbol  10%}">10</a>
+        <a clss='col' href="{% url 'finalsell' data.symbol 20 %}">20</a>
     </div>
 
     <div class="row">
-        <a class='col' href="{% url 'finalize' data.symbol 50 %}">50</a>
-        <a clss='col' href="{% url 'finalize' data.symbol 100 %}">100</a>
+        <a class='col' href="{% url 'finalsell' data.symbol 50 %}">50</a>
+        <a clss='col' href="{% url 'finalsell' data.symbol 100 %}">100</a>
         <a clss='col' href="#">...</a>
     </div>
 
