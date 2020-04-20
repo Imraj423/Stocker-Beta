@@ -8,11 +8,6 @@ class Login_Form(forms.Form):
     password = forms.CharField(max_length=42)
 
 
-# class Login_Form(ModelForm):
-#     class Meta:
-#         model = Custom_User
-#         fields = ['username','password']
-
 class Signup_Form(ModelForm):
     class Meta:
         model = Custom_User

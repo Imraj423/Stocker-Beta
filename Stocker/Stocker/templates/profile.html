@@ -32,8 +32,8 @@
 </style>
 <a href="/login/">login</a>
 <a href="/">Home</a>
- <a class="hello-msg" href="{% url 'logout' %}">Logout</a>
- <a class="hello-msg" href="{% url 'signup' %}">signup</a>
+<a class="hello-msg" href="{% url 'logout' %}">Logout</a>
+<a class="hello-msg" href="{% url 'signup' %}">signup</a>
 <hr />
 <h1>{{request.user}}'s Profile</h1>
 <hr />
@@ -65,7 +65,7 @@
             <p class='col'>email</p>
             <p class='col'>{{ user.email}}</p>
         </div>
-        
+
         <div class='row'>
             <p class='col'>first name</p>
             <p class='col'>{{ user.first_name}}</p>

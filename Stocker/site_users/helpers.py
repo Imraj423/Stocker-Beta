@@ -9,12 +9,14 @@ load_dotenv(dotenv_path=f'{BASE_DIR}/Stocker/.env')
 
 def fetchCompanyData(ticker):
     key = os.getenv("IEX_KEY_1")
+    ticker = ticker.upper()
     r = requests.get(f'https://cloud.iexapis.com/stable/stock/{ticker}/company?token={key}')
     return r.json()
 
 
 def fetchTicker(ticker):
     key = os.getenv("IEX_KEY_2")
+    ticker = ticker.upper()
     r = requests.get(f'https://sandbox.iexapis.com/stable/stock/{ticker}/quote?token={key}')
 
     co = Company.objects.filter(ticker_symbol=ticker).first()
@@ -39,4 +41,5 @@ def multiFetcher(follow_list):
             'price': data['latestPrice'],
             'change': data['change']
         })
+
     return stock_tickers

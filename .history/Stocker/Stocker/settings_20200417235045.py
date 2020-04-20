@@ -12,15 +12,23 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'a06+i#1^f62agep^&0%d#&@owo@vuk-58t-yu2nq)ae#o8@s0w'
 
+# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-LOGIN_URL = 'login/'
+
+# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -49,8 +57,7 @@ ROOT_URLCONF = 'Stocker.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR, 'Stocker', 'templates')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -66,6 +73,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'Stocker.wsgi.application'
 
 
+# Database
+# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -73,6 +83,9 @@ DATABASES = {
     }
 }
 
+
+# Password validation
+# https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -89,6 +102,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+# Internationalization
+# https://docs.djangoproject.com/en/3.0/topics/i18n/
+
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -99,11 +116,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/3.0/howto/static-files/
+
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'site_users.Custom_User'
-
-handler404 = 'Stocker.views.my_custom_page_not_found_view'
-handler500 = 'Stocker.views.my_custom_error_view'
-handler403 = 'Stocker.views.my_custom_permission_denied_view'
-handler400 = 'Stocker.views.my_custom_bad_request_view'
