@@ -119,21 +119,42 @@ def buy(request, company):
 
 
 @login_required(login_url="/login/")
-def finish_buy(request, ticker):
+def sell(request, company):
+    data = fetchTicker(company)
+    return render(request, 'sell.html', {'data': data})
+
+
+@login_required(login_url="/login/")
+def finish_buy(request, ticker, amount):
 
     data = fetchTicker(ticker)
-    P = Portfolio.objects.get(owner=request.user)
-    C = Company.objects.filter(ticker_symbol=data['symbol'])
-    H = P.Holdings.get(stock=C)
+    co = Company.objects.get(ticker_symbol=ticker)
 
-    if H:
-        H.count += 1
-        H.save()
+    if not request.user.portfolio.stocks.filter(stock=co):
+        ho = Holdings.objects.create(stock=co, count=int(amount))
+        request.user.portfolio.stocks.add(ho)
+
     else:
-        H = Holdings.objects.create(stock=C, count=1)
-        H.save()
-        request.user.portfolio.stocks.add(H)
-        request.user.portfolio.save()
+        stock_to_update = request.user.portfolio.stocks.filter(stock=co).first()
+        stock_to_update.count += int(amount)
+        stock_to_update.save()
+
+
+@login_required(login_url="/login/")
+def finish_sell(request, ticker, amount):
+
+    data = fetchTicker(ticker)
+    co = Company.objects.get(ticker_symbol=ticker)
+
+    try:
+        stock_to_update = request.user.portfolio.stocks.filter(stock=co).first()
+        if stock_to_update.count >= amount:
+            stock_to_update.count -= int(amount)
+            stock_to_update.save()
+        else:
+            print('error')
+    except:
+        print('idk')
 
     return HttpResponseRedirect(reverse('index'))
 
