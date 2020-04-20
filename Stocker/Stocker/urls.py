@@ -15,7 +15,7 @@ urlpatterns = [
     path('finalizesell/<str:ticker>/<int:amount>/', views.finish_sell, name='finalsell'),
     path('favorite/<str:company>/', views.add_to_following, name='favorite'),
     path('', include('site_users.urls'), name='profile'),
-    path('login/', views.login_view, name='login'),
+    path('login/', views.LoginView.as_view(), name='login'),
     path('signup/', views.signup, name='signup'),
     path('logout/', views.logoutUser, name='logout')
 
