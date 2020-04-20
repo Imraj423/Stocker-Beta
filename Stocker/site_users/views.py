@@ -139,6 +139,8 @@ def finish_buy(request, ticker, amount):
         stock_to_update.count += int(amount)
         stock_to_update.save()
 
+    return HttpResponseRedirect(reverse('index'))
+
 
 @login_required(login_url="/login/")
 def finish_sell(request, ticker, amount):
