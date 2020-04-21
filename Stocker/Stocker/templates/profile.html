@@ -30,17 +30,13 @@
         margin-bottom: 84px;
     }
 </style>
-<a href="/login/">login</a>
-<a href="/">Home</a>
-<a class="hello-msg" href="{% url 'logout' %}">Logout</a>
-<a class="hello-msg" href="{% url 'signup' %}">signup</a>
 <hr />
 <h1>{{request.user}}'s Profile</h1>
 <hr />
 
 <div class='container'>
     <hr />
-    <h3>Deposit / Withdraw</h3>
+    <h3 >Deposit / Withdraw</h3>
     <hr />
 
     <form action='' method='post'>

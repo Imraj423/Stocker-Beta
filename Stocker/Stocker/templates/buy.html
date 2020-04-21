@@ -21,21 +21,29 @@
 <h3>Shares to Buy</h3>
 <p><a href="{% url 'sell' data.symbol %}">Or Sell!</a></p>
 
-<h1>$ {{ data.latestPrice }}</h1>
+<h1>
+    $ {{ data.latestPrice }}
+    {{data.change}}
+    {% if data.change > 0 %}
+    <i class="fa fa-car" style="font-size:60px;color:turquoise;"></i>
+    {% elif %}
+    <i class="fa fa-car" style="font-size:60px;color:palevioletred;"></i>
+    {% endif %}
+</h1>
 <div class="container w-50 ml-auto mr-auto">
-
-    <div class="row">
-        <a class='col' href="{% url 'finalize' data.symbol 5 %}">5</a>
-        <a clss='col' href="{% url 'finalize' data.symbol  10%}">10</a>
-        <a clss='col' href="{% url 'finalize' data.symbol 20 %}">20</a>
-    </div>
-
-    <div class="row">
-        <a class='col' href="{% url 'finalize' data.symbol 50 %}">50</a>
-        <a clss='col' href="{% url 'finalize' data.symbol 100 %}">100</a>
-        <a clss='col' href="#">...</a>
-    </div>
-
+        <div class="centerBlock">
+                <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                
+                    <a class="btn btn-primary" href="/finalize/AMZN" role="button">5</a>
+                    <a class="btn btn-primary" href="/finalize/AMZN" role="button">10</a>
+                    <a class="btn btn-primary" href="/finalize/AMZN" role="button">20</a>
+                    <a class="btn btn-primary" href="#" role="button">50</a>
+                    <a class="btn btn-primary" href="#" role="button">100</a>
+                    <a class="btn btn-primary" href="#" role="button">...</a>
+                
+                </div>
+        
+        </div>
 </div>
 
 {% endblock %}
