@@ -19,16 +19,14 @@ from portfolio.models import Portfolio, Holdings, Company
 from .models import Custom_User
 from .forms import Login_Form, Signup_Form, Deposit_Form, Withdraw_Form, Search_Form
 from .helpers import *
+import requests
+
 
 def handler404(request, exception):
     return render(request, '404.html', status=404)
 
 def handler500(request):
     return render(request, '500.html', status=500)
-
-
-
-import requests
 
 
 @login_required(login_url="/login/")
@@ -57,7 +55,8 @@ def index(request):
                         'form': search_form,
                         'following': follow_data,
                         'company': company_data,
-                        'portfolio': request.user.portfolio.stocks.all()
+                        'portfolio': request.user.portfolio.stocks.all(),
+                        'balance': request.user.deposits
                     })
 
 

@@ -30,10 +30,6 @@
         margin-bottom: 84px;
     }
 </style>
-<a href="/login/">login</a>
-<a href="/">Home</a>
-<a class="hello-msg" href="{% url 'logout' %}">Logout</a>
-<a class="hello-msg" href="{% url 'signup' %}">signup</a>
 <hr />
 <h1>{{request.user}}'s Profile</h1>
 <hr />
@@ -76,13 +72,12 @@
         </div>
         <div class='row'>
             <p class='col'>total deposits</p>
-            <p class='col'>{{ user.deposits }}</p>
-        </div>
-        <div class='row'>
-            <p class='col'>total withdraws</p>
-            <p class='col'>{{ user.withdraws }}</p>
+            <p class='col'>{{ user.deposits }}</p </div>
+            <div class='row'>
+                <p class='col'>total withdraws</p>
+                <p class='col'>{{ user.withdraws }}</p>
+            </div>
         </div>
     </div>
-</div>
 
-{% endblock %}
+    {% endblock %}
