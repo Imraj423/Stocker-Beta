@@ -4,6 +4,8 @@
 
 ## That history app Raj had me install ##
 .history
+.history/Stocker
+.history/Stocker/*
 .history/*
 .venv
 .vscode
