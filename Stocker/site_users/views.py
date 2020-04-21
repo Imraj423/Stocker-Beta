@@ -189,7 +189,7 @@ def logoutUser(request):
 
 
 def signup(request):
-    html = 'basic_form.html'
+    html = 'sign_up_form.html'
 
     if request.method == 'POST':
         form = Signup_Form(request.POST)
