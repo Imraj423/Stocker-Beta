@@ -16,7 +16,7 @@ class Company(models.Model):
         return f"{self.name} - {self.ticker_symbol}"
 
 # look into this if we get to doing it on time
-# it's easy
+# it's easy yeet yeet
 class Holdings(models.Model):
     # one element per stock per user
     # This class would simply represent an amount of a single stock
