@@ -8,6 +8,10 @@
         margin: 42px 0px 42px 0px;
     }
 
+    #center {
+        text-align: center;
+    }
+
     button {
         border-radius: 30px;
         margin: 8px;
@@ -15,20 +19,24 @@
 </style>
 
 <h1>{{ data.companyName}}</h1>
-{{data.symbol}}
+<p id='center'>{{data.symbol}}</p>
 <hr />
 
 <h3>Shares to Buy</h3>
-<p><a href="{% url 'sell' data.symbol %}">Or Sell!</a></p>
+<p id='center'><a href="{% url 'sell' data.symbol %}">Or Sell!</a></p>
 
 <h1>
 
     $ {{ data.latestPrice }}
-    {{data.change}}
-    <i class="fa fa-car" style="font-size:60px;color:turquoise;"></i>
-    <i class="fa fa-car" style="font-size:60px;color:palevioletred;"></i>
+    <i class="fas fa-arrow-up" style="font-size:60px;color:turquoise;"></i>
+    <i class="fas fa-arrow-down" style="font-size:60px;color:palevioletred;"></i>
 
 </h1>
+<h1 id="center">
+    <br />
+    % {{data.change}}
+</h1>
+
 <div class="container w-50 ml-auto mr-auto">
     <div class="centerBlock">
         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">

@@ -15,7 +15,7 @@
 
     form {
         width: 50%;
-        margin: 0px auto 0px auto;
+        margin: 0px auto 84px auto;
     }
 
     form input {
@@ -27,29 +27,13 @@
     div#personal {
         text-align: center;
         width: 50%;
-        margin-bottom: 84px;
     }
 </style>
+
 <hr />
 <h1>{{request.user}}'s Profile</h1>
 <hr />
 
-<div class='container'>
-    <hr />
-    <h3>Deposit / Withdraw</h3>
-    <hr />
-
-    <form action='' method='post'>
-        {% csrf_token %}
-        {{ deposit_form }}
-        <input type='submit' value="Deposit" />
-    </form>
-    <form action='' method='post'>
-        {% csrf_token%}
-        {{ withdraw_form }}
-        <input type='submit' value='Withdraw' />
-    </form>
-</div>
 
 <div class='container'>
     <hr />
@@ -57,6 +41,7 @@
     <hr />
 
     <div class='container' id='personal'>
+
         <div class='row'>
             <p class='col'>email</p>
             <p class='col'>{{ user.email}}</p>
@@ -66,18 +51,28 @@
             <p class='col'>first name</p>
             <p class='col'>{{ user.first_name}}</p>
         </div>
+
         <div class='row'>
             <p class='col'>last name</p>
             <p class='col'>{{ user.last_name}}</p>
         </div>
+
         <div class='row'>
             <p class='col'>total deposits</p>
-            <p class='col'>{{ user.deposits }}</p </div>
-            <div class='row'>
-                <p class='col'>total withdraws</p>
-                <p class='col'>{{ user.withdraws }}</p>
-            </div>
+            <p class='col'>{{ user.deposits }}</p>
         </div>
+
     </div>
 
+
+    <div class='container mb-5'>
+        <hr />
+        <h3>Deposit / Withdraw</h3>
+        <hr />
+        <form action='' method='post'>
+            {% csrf_token %}
+            {{ deposit_form }}
+            <input type='submit' value="Deposit" />
+        </form>
+    </div>
     {% endblock %}
