@@ -8,7 +8,7 @@
 .venv
 .vscode
 .DS_Store
-
+.Stocker/Stocker/secrets_kill.py
 ### Django ###
 *.log
 *.pot
