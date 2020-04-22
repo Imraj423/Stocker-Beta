@@ -9,12 +9,16 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-from .secrets_kill import SECRET_KEY
+from dotenv import load_dotenv
+
 import os
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY
+load_dotenv(dotenv_path=f'{BASE_DIR}/Stocker/.env')
+
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = True
 
