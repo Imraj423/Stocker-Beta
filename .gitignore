@@ -6,7 +6,7 @@
 .history
 .venv
 .vscode
-
+.Stocker/Stocker/secrets_kill.py
 ### Django ###
 *.log
 *.pot
