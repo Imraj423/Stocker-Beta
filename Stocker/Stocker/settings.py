@@ -9,12 +9,12 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-
+from .secrets_kill import SECRET_KEY
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = 'a06+i#1^f62agep^&0%d#&@owo@vuk-58t-yu2nq)ae#o8@s0w'
+SECRET_KEY
 
 DEBUG = True
 
@@ -31,7 +31,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'site_users',
-    'portfolio'
+    'portfolio',
+    'dotenv'
 ]
 
 MIDDLEWARE = [
