@@ -60,6 +60,7 @@
         border-radius: 30px;
         padding: 15px 0px 0px 0px;
         margin: 8px 0px 8px 0px;
+        background-color: white;
     }
 
     div#searchData {
@@ -80,6 +81,7 @@
         border-radius: 30px;
         padding: 0px 20px 0px 20px;
         text-align: center;
+        background-color: white;
     }
 
     div#detailLong h3.row {
@@ -96,6 +98,7 @@
 </style>
 
 <div>
+    <br/>
     <div class="container mt-6">
         <div class="row">
             <h1 class="col-sm">
@@ -111,17 +114,27 @@
     </form>
 
     {% if data %}
-    <div>
-        <div class='row' id='searchData'>
-            <p class='col'>{{ data.symbol }}</p>
-            <p class='col'>{{ data.companyName }}</p>
-            <p class='col'>{{ data.latestPrice }}</p>
-            <p class='col'>{{ data.changePercent }}</p>
+    <br>
+    <div class="card bg-light m-auto" style="width: 18rem;">
+        <div class='card-title'>
+            <!-- <p class='col'>{{ data.symbol }}</p> -->
+            <h3 class='col' style="padding-top: 2rem;">{{ data.companyName }}</h3>
+            <h5 class="card-subtitle mb-2 text-muted">{{ data.symbol }}</h6>
+            <p class='col'>${{ data.latestPrice }}</p>
+            <p class='col'>{{ data.changePercent }}
+                {% if 0 > data.changePercent %}
+                <i class="fa fa-arrow-down fa-md" style="color: salmon;"></i>
+                {% else %}
+                <i class="fa fa-arrow-up fa-md" style="color: turquoise;"></i>
+                {% endif %}
+            </p>
         </div>
-        <div class='row' id='searchDataButtons'>
-            <p class='col'><a href="{% url 'favorite' data.symbol %}">Follow</a></p>
-            <p class='col'><a href="{% url 'buy' data.symbol %}">Buy</a></p>
-            <p class='col'><a href="{% url 'sell' data.symbol %}">Sell</a></p>
+        <div class='card-body'>
+            <div class='btn-group'>
+            <p class='col'><a class="btn btn-primary" href="{% url 'favorite' data.symbol %}">Follow</a></p>
+            <p class='col'><a class="btn btn-primary" href="{% url 'buy' data.symbol %}">Buy</a></p>
+            <p class='col'><a class="btn btn-primary" href="{% url 'sell' data.symbol %}">Sell</a></p>
+            </div>
         </div>
     </div>
     {% endif %}
@@ -135,7 +148,7 @@
 
     <p>{{ something }}</p>
     {% for holding in portfolio %}
-    <div class='row'>
+    <div class='row' id='detailShort'>
         <p class='col'>{{holding.stock}}</p>
         <p class='col'>{{holding.count}}</p>
     </div>
@@ -158,7 +171,13 @@
             </p>
             <p class='col'>{{tkr.company}}</p>
             <p class='col'>$ {{tkr.price}}</p>
-            <p class='col'>{{tkr.change}} %</p>
+            <p class='col'>{{tkr.change}} %
+                    {% if 0 > tkr.change %}
+                    <i class="fa fa-arrow-down fa-md" style="color: salmon;"></i>
+                    {% else %}
+                    <i class="fa fa-arrow-up fa-md" style="color: turquoise;"></i>
+                    {% endif %}
+            </p>
         </div>
 
         <div id='detailLong' data-tkr=`{trk.company}`>

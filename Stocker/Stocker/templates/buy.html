@@ -17,28 +17,25 @@
         margin: 8px;
     }
 </style>
-
+<br>
+<div class="card bg-light m-auto" style="padding: 2rem;">
 <h1>{{ data.companyName}}</h1>
 <p id='center'>{{data.symbol}}</p>
 <hr />
-
-<h3>Shares to Buy</h3>
-<p id='center'><a href="{% url 'sell' data.symbol %}">Or Sell!</a></p>
-
 <h1>
-
     $ {{ data.latestPrice }}
-    <i class="fas fa-arrow-up" style="font-size:60px;color:turquoise;"></i>
-    <i class="fas fa-arrow-down" style="font-size:60px;color:palevioletred;"></i>
 
 </h1>
-<h1 id="center">
-    <br />
+<h2 id="center">
     % {{data.change}}
-</h1>
-
-<div class="container w-50 ml-auto mr-auto">
-    <div class="centerBlock">
+    {% if 0 > data.changePercent %}
+    <i class="fa fa-arrow-down fa-md" style="color: salmon;"></i>
+    {% else %}
+    <i class="fa fa-arrow-up fa-md" style="color: turquoise;"></i>
+    {% endif %}
+</h2>
+<hr/>
+<h3>Shares to Buy</h3>
         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
 
             <a class="btn btn-primary" href="{% url 'finalize' data.symbol 5%}" role="button">5</a>
@@ -49,7 +46,8 @@
             <a class="btn btn-primary" href="#" role="button">...</a>
 
         </div>
-
+        <br>
+        <p id='center'><a class="btn btn-primary" href="{% url 'sell' data.symbol %}" role="button">Or Sell!</a></p>
     </div>
 </div>
 
