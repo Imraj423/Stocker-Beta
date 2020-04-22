@@ -98,20 +98,32 @@
 </style>
 
 <div>
+        <div class="container mt-6">
     <br/>
+    <br>
+    <div class="card bg-light m-auto" style="padding-left: 4rem; padding-right: 4rem; padding-bottom: 2rem;">
+        <br>
+            <h1>Search</h1>
+            <hr>
+            <form action='' method='post'>
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button href="{% url 'index' %}">Search</button>
+                </form>
+    </div>
+   <br>
+</div>
     <div class="container mt-6">
-        <div class="row">
-            <h1 class="col-sm">
+            
+            <div class="card bg-light m-auto" style="padding-left: 4rem; padding-right: 4rem; padding-bottom: 2rem;">
+                    <br>
+                    <h1>Balance</h1>
+                    <hr>
+            <h2 class="col-sm">
                 $ {{ balance }}
-            </h1>
+            </h2>
         </div>
     </div>
-
-    <form action='' method='post'>
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button href="{% url 'index' %}">Search</button>
-    </form>
 
     {% if data %}
     <br>
@@ -143,8 +155,11 @@
 
 <div class='container' id='portfolio'>
     <hr />
+    <div class="card bg-light m-auto" style="padding-left: 4rem; padding-right: 4rem; padding-bottom: 2rem;">
     <h1>Portfolio</h1>
-    <hr />
+    <hr>
+    
+    
 
     <p>{{ something }}</p>
     {% for holding in portfolio %}
@@ -153,11 +168,12 @@
         <p class='col'>{{holding.count}}</p>
     </div>
     {% endfor %}
-
+    </div>
 </div>
 
 <div class='container' id='following'>
     <hr />
+    <div class="card bg-light m-auto" style="padding-left: 4rem; padding-right: 4rem; padding-bottom: 2rem;">
     <h1>Following</h1>
     <hr />
     <div id='followingList'>
@@ -212,6 +228,7 @@
         </div>
         {% endfor %}
     </div>
+</div>
 </div>
 
 

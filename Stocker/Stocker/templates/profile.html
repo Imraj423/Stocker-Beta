@@ -29,18 +29,15 @@
         width: 50%;
     }
 </style>
-
-<hr />
+<br>
+<div class="card bg-light m-auto" style="padding-left: 4rem; padding-right: 4rem;">
 <h1>{{request.user}}'s Profile</h1>
-<hr />
 
 
-<div class='container'>
+<div class='container' style="padding-bottom: 0;"></div>
     <hr />
     <h3>Personal Details</h3>
     <hr />
-
-    <div class='container' id='personal'>
 
         <div class='row'>
             <p class='col'>email</p>
@@ -62,14 +59,11 @@
             <p class='col'>{{ user.deposits }}</p>
         </div>
 
-    </div>
 
-
-    <div class='container mb-5'>
         <hr />
         <h3>Deposit / Withdraw</h3>
         <hr />
-        <form action='' method='post'>
+        <form action='' method='post' style="right: 30px;">
             {% csrf_token %}
             {{ deposit_form }}
             <input type='submit' value="Deposit" />
